@@ -28,15 +28,12 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
-      working-directory: thereal/client
 
     - name: Analyze project source
       run: flutter analyze
-      working-directory: thereal/client
 
     - name: Run Flutter tests
       run: flutter test
-      working-directory: thereal/client
 
 
 
