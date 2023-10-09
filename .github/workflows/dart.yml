@@ -22,21 +22,22 @@ jobs:
 
       - name: Install dependencies
         run: dart pub get
-        working-directory: thereal/client
+        working-directory: client
 
       # Uncomment this step if you want to verify the use of 'dart format' on each commit.
       # - name: Verify formatting
       #   run: dart format --output=none --set-exit-if-changed .
-      #   working-directory: thereal/client
+      #   working-directory: client
 
       - name: Analyze project source
         run: dart analyze
-        working-directory: thereal/client
+        working-directory: client
 
       # Only run the test if you have tests set up in your project.
       # - name: Run tests
       #   run: dart test
-      #   working-directory: thereal/client
+      #   working-directory: client
+
 
 
 
