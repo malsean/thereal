@@ -27,13 +27,19 @@ jobs:
         channel: 'stable'
 
     - name: Install dependencies
-      run: flutter pub get
+      run: |
+        cd thereal/client
+        flutter pub get
 
     - name: Analyze project source
-      run: flutter analyze
+      run: |
+        cd thereal/client
+        flutter analyze
 
     - name: Run Flutter tests
-      run: flutter test
+      run: |
+        cd thereal/client
+        flutter test
 
 
 
