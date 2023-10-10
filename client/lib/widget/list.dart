@@ -57,7 +57,7 @@ class UserTilePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  isadded!
+                  isadded
                       ? Container()
                       : Container(
                           height: 30,
