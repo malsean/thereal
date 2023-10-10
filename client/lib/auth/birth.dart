@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:client/lib/auth/signup.dart';
+import 'signup.dart';
 import '../animation/animation.dart';
 import '../widget/custom/rippleButton.dart';
 
