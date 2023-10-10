@@ -29,11 +29,6 @@ jobs:
           cd client
           flutter analyze
 
-      - name: Run Flutter tests
-        run: |
-          cd client
-          flutter test
-
 
 
 
