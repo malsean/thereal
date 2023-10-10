@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rebeal/model/post.module.dart';
 
 class GridPostWidget extends StatefulWidget {
-  PostModel postModel;
-  GridPostWidget({required this.postModel, super.key});
+  final PostModel postModel;  // Make this field final
+  GridPostWidget({required this.postModel, Key? key}) : super(key: key);  // Fixed super call
 
   @override
   State<GridPostWidget> createState() => _GridPostWidgetState();
@@ -12,6 +12,7 @@ class GridPostWidget extends StatefulWidget {
 
 class _GridPostWidgetState extends State<GridPostWidget> {
   bool switcher = false;
+  
   void switcherFunc() {
     setState(() {
       switcher = !switcher;
