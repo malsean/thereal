@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rebeal/model/post.module.dart';
 
 class FeedPostWidget extends StatefulWidget {
-  PostModel postModel;
-  FeedPostWidget({required this.postModel, super.key});
+  final PostModel postModel;  // make this final
+  FeedPostWidget({required this.postModel, Key? key}) : super(key: key);  // adjust the constructor
 
   @override
   State<FeedPostWidget> createState() => _FeedPostWidgetState();
