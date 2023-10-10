@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:flutter/src/widgets/basic.dart';
+import 'package:flutter/widgets.dart';
 import 'package:rebeal/model/user.module.dart';
 
 class PostModel {
