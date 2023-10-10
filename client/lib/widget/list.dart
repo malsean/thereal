@@ -9,7 +9,7 @@ class UserTilePage extends StatelessWidget {
   UserTilePage({Key? key, required this.user, required this.isadded})
       : super(key: key);
   final UserModel user;
-  bool? isadded;
+  final bool isadded;  // Make this field final
 
   @override
   Widget build(BuildContext context) {
