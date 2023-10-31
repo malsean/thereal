@@ -133,7 +133,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 Brightness.dark, // Définir le mode sombre
                           ),
                           child: CupertinoActionSheet(
-                            title: Text('Change of profile picture'),
+                            title: Text('Change profile picture'),
                             message: Text(
                                 'Your profile picture is visible to everyone and will make it easier for your friends to add you'),
                             actions: <Widget>[
