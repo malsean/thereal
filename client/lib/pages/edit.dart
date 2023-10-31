@@ -116,10 +116,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 "Modify profile",
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ))),
-      body: SingleChildScrollView(
-          child: Center(
-              child: Column(
-        children: [
+      body: SingleChildScrollView(  // <-- Wrap your content with SingleChildScrollView
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),  // <-- Add some padding for better UI
+            child: Column(
+              children: [
           Container(
             height: 30,
           ),
@@ -321,8 +323,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ],
               ))
-        ],
-      ))),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
