@@ -7,6 +7,7 @@ import 'package:rebeal/helper/utility.dart';
 import 'package:rebeal/state/auth.state.dart';
 import 'package:rebeal/styles/color.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:rebeal/pages/login_page.dart'; // Ensure this import is correct
 
 import 'edit.dart';
 
@@ -173,9 +174,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      state.logoutCallback();
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      // Clearing the user session and navigating to LoginPage
+                      Provider.of<AuthState>(context, listen: false).resetState();
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage()), // Ensure LoginPage is the correct name
+                          (Route<dynamic> route) => false);
                     },
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
@@ -207,7 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   height: 40,
                 ),
                 Text(
-                  "You join BeReal on a few days ago" +
+                  "You joined BeReal a few days ago" +
                       Utility.getdob(
                           state.profileUserModel!.createAt.toString()),
                   textAlign: TextAlign.center,
