@@ -10,13 +10,8 @@ class SearchState extends AppStates {
   List<UserModel>? _userFilterlist;
   List<UserModel>? _userlist;
 
-  List<UserModel>? get userlist {
-    if (_userFilterlist == null) {
-      return null;
-    } else {
-      return List.from(_userFilterlist!);
-    }
-  }
+List<UserModel>? get userlist => _userFilterlist == null ? null : List.from(_userFilterlist!);
+
 
   void getDataFromDatabase() {
     try {
@@ -45,17 +40,19 @@ class SearchState extends AppStates {
         },
       );
     } catch (error) {
-      isBusy = false;
-      print(error);
+        isBusy = false;
+        print(error);
+        // Optionally, you can set an error state or show an error message to the user.
+        // For example:
+        // errorMessage = "Failed to fetch data from database. Please try again.";
     }
   }
 
   void filterByUsername(String? name) {
-    if (name != null &&
-        name.isEmpty &&
-        _userlist != null &&
-        _userlist!.length != _userFilterlist!.length) {
-      _userFilterlist = List.from(_userlist!);
+    if (name != null && name.isEmpty) {
+        if (_userlist != null && (_userFilterlist == null || _userlist!.length != _userFilterlist!.length)) {
+            _userFilterlist = List.from(_userlist!);
+        }
     }
     if (_userlist == null && _userlist!.isEmpty) {
       print("User list is empty");
