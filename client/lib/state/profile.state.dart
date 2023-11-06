@@ -10,23 +10,28 @@ import 'package:rebeal/model/user.module.dart';
 class ProfileState extends ChangeNotifier {
   ProfileState(this.profileId) {
     databaseInit();
-    userId = FirebaseAuth.instance.currentUser!.uid;
-    _getloggedInUserProfile(userId);
-    _getProfileUser(profileId);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userId = user.uid;
+      _getloggedInUserProfile(userId);
+      _getProfileUser(profileId);
+    } else {
+      print("Error: User is not authenticated.");
+    }
   }
 
-  late String userId;
+  String? userId;
 
-  late UserModel _userModel;
-  UserModel get userModel => _userModel;
+  UserModel? _userModel;
+  UserModel? get userModel => _userModel;
 
   dabase.Query? _profileQuery;
-  late StreamSubscription<DatabaseEvent> profileSubscription;
+  StreamSubscription<DatabaseEvent>? profileSubscription;
 
   final String profileId;
 
-  late UserModel _profileUserModel;
-  UserModel get profileUserModel => _profileUserModel;
+  UserModel? _profileUserModel;
+  UserModel? get profileUserModel => _profileUserModel;
 
   bool _isBusy = true;
   bool get isbusy => _isBusy;
@@ -39,34 +44,39 @@ class ProfileState extends ChangeNotifier {
     try {
       if (_profileQuery == null) {
         _profileQuery = kDatabase.child("profile").child(profileId);
-        profileSubscription = _profileQuery!.onValue.listen(_onProfileChanged);
+        if (_profileQuery != null) {
+          profileSubscription = _profileQuery!.onValue.listen(_onProfileChanged);
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+      print("Error in databaseInit: $error");
+    }
   }
 
   bool get isMyProfile => profileId == userId;
 
-  void _getloggedInUserProfile(String userId) async {
-    kDatabase.child("profile").child(userId).once().then((DatabaseEvent event) {
-      final snapshot = event.snapshot;
-      if (snapshot.value != null) {
-        var map = snapshot.value as Map<dynamic, dynamic>?;
-        if (map != null) {
-          _userModel = UserModel.fromJson(map);
+  void _getloggedInUserProfile(String? userId) {
+    if (userId == null) return;
+    try {
+      kDatabase.child("profile").child(userId).once().then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
+        if (snapshot.value != null) {
+          var map = snapshot.value as Map<dynamic, dynamic>?;
+          if (map != null) {
+            _userModel = UserModel.fromJson(map);
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      print("Error in _getloggedInUserProfile: $error");
+    }
   }
 
   void _getProfileUser(String? userProfileId) {
-    assert(userProfileId != null);
+    if (userProfileId == null) return;
     try {
       loading = true;
-      kDatabase
-          .child("profile")
-          .child(userProfileId!)
-          .once()
-          .then((DatabaseEvent event) {
+      kDatabase.child("profile").child(userProfileId).once().then((DatabaseEvent event) {
         final snapshot = event.snapshot;
         if (snapshot.value != null) {
           var map = snapshot.value as Map;
@@ -75,49 +85,55 @@ class ProfileState extends ChangeNotifier {
         loading = false;
       });
     } catch (error) {
+      print("Error in _getProfileUser: $error");
       loading = false;
     }
   }
 
   followUser({bool removeFollower = false}) {
     try {
-      if (removeFollower) {
-        profileUserModel.followersList!.remove(userModel.userId);
-        userModel.followingList!.remove(profileUserModel.userId);
-      } else {
-        profileUserModel.followersList ??= [];
-        profileUserModel.followersList!.add(userModel.userId!);
-        userModel.followingList ??= [];
-        addFollowNotification();
-        userModel.followingList!.add(profileUserModel.userId!);
-      }
-      kDatabase
-          .child('profile')
-          .child(profileUserModel.userId!)
-          .child('followerList')
-          .set({"key:": userModel.followingList, "accept": false});
-      kDatabase
-          .child('profile')
-          .child(userModel.userId!)
-          .child('followingList')
-          .set({userModel.followingList, false});
+        if (userModel?.userId != null && profileUserModel?.userId != null) {
+            List<String>? followers = profileUserModel?.followersList ?? [];
+            List<String>? following = userModel?.followingList ?? [];
 
-      notifyListeners();
-    } catch (error) {}
+            if (removeFollower) {
+                followers.remove(userModel!.userId);
+                following.remove(profileUserModel!.userId);
+            } else {
+                followers.add(userModel!.userId!);
+                following.add(profileUserModel!.userId!);
+                addFollowNotification();
+            }
+
+            kDatabase.child('profile')
+                .child(profileUserModel!.userId!)
+                .child('followerList')
+                .set({"key": following, "accept": false});
+
+            kDatabase.child('profile')
+                .child(userModel!.userId!)
+                .child('followingList')
+                .set({"key": following, "accept": false});
+
+            notifyListeners();
+        }
+    } catch (error) {
+        print("Error in followUser: $error");
+    }
   }
 
   void addFollowNotification() {
-    kDatabase.child('notification').child(profileId).child(userId).set({
+    kDatabase.child('notification').child(profileId).child(userId!).set({
       'type': NotificationType.Follow.toString(),
       'createdAt': DateTime.now().toUtc().toString(),
       'data': UserModel(
-              displayName: userModel.displayName,
-              profilePic: userModel.profilePic,
-              userId: userModel.userId,
-              bio: userModel.bio == "Edit profile to update bio"
+              displayName: userModel!.displayName,
+              profilePic: userModel!.profilePic,
+              userId: userModel!.userId,
+              bio: userModel!.bio == "Edit profile to update bio"
                   ? ""
-                  : userModel.bio,
-              userName: userModel.userName)
+                  : userModel!.bio,
+              userName: userModel!.userName)
           .toJson()
     });
   }
@@ -132,8 +148,9 @@ class ProfileState extends ChangeNotifier {
 
   @override
   void dispose() {
-    _profileQuery!.onValue.drain();
-    profileSubscription.cancel();
+    _profileQuery?.onValue.drain();
+    profileSubscription?.cancel();
     super.dispose();
   }
 }
+
