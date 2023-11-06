@@ -71,15 +71,17 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   bool isFollower() {
-    var authstate = Provider.of<ProfileState>(context, listen: false);
-    if (authstate.profileUserModel.followersList != null &&
-        authstate.profileUserModel.followersList!.isNotEmpty) {
-      return (authstate.profileUserModel.followersList!
-          .any((x) => x == authstate.userId));
-    } else {
-      return false;
-    }
+  var authstate = Provider.of<ProfileState>(context, listen: false);
+  if (authstate.profileUserModel != null &&
+      authstate.profileUserModel!.followersList != null &&
+      authstate.profileUserModel!.followersList!.isNotEmpty) {
+    return (authstate.profileUserModel!.followersList!
+        .any((x) => x == authstate.userId));
+  } else {
+    return false;
   }
+}
+
 
   Future<bool> _onWillPop() async {
     return true;
@@ -90,12 +92,10 @@ class _ProfilePageState extends State<ProfilePage> {
   double rateScroll = 0;
   double opacity = -5;
 
-  void _shareText(String name) {
-    Share.share(
-      "https://rebe.al/$name",
-      subject: "Discover $name on ReBeal.",
-      sharePositionOrigin: Rect.fromLTWH(0, 0, 10, 10),
-    );
+  void _shareText(String username) {
+   final link = "https://yourappwebsite.com/profile/$username"; 
+   // replace 'https://yourappwebsite.com' with the base URL for your app's website
+   Share.share('Check out my profile on YourAppName: $link');
   }
 
   Widget floatingButton() {
@@ -217,8 +217,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           onStretchTrigger: () {
                             return Future<void>.value();
                           },
-                          title: Text(authstate.userModel.userName!
-                              .replaceAll("@", "")),
+                          title: Text(
+                             authstate.userModel?.userName?.replaceAll("@", "") ?? "Default Username"
+                            ),
+
                           backgroundColor: Colors.black.withOpacity(0),
                           expandedHeight:
                               MediaQuery.of(context).size.height / 2.2,
@@ -234,14 +236,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               fit: StackFit.expand,
                               children: <Widget>[
                                 Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
+                                  height: MediaQuery.of(context).size.height / 2,
                                   padding: const EdgeInsets.only(top: 0),
                                   child: CachedNetworkImage(
                                       fit: BoxFit.cover,
-                                      imageUrl: authstate
-                                              .profileUserModel.profilePic ??
-                                          "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"),
+                                      imageUrl: authstate.profileUserModel?.profilePic ?? 
+                                                "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 150),
@@ -267,8 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          authstate
-                                              .profileUserModel.displayName!,
+                                          authstate.profileUserModel?.displayName ?? 'Default Name',
                                           style: TextStyle(
                                             fontFamily: 'Outfit',
                                             fontSize: 38,
@@ -282,11 +281,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                           width: 100,
                                         ),
                                         GestureDetector(
-                                            onTap: () {
-                                              _shareText(authstate
-                                                  .userModel.userName!
-                                                  .replaceAll("@", ""));
-                                            },
+                                        onTap: () {
+                                          if (authstate.userModel != null && authstate.userModel!.userName != null) {
+                                            _shareText(authstate.userModel!.userName!.replaceAll("@", ""));
+                                          } else {
+                                            print("Error: userModel or userName is null.");
+                                          }
+                                        },
                                             child: Container(
                                                 height: 35,
                                                 width: 35,
@@ -321,11 +322,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SliverList(
                           delegate: SliverChildListDelegate(
-                            <Widget>[
-                              Padding(
+                              <Widget>[
+                                Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Text(
-                                    authstate.profileUserModel.bio!,
+                                    authstate.profileUserModel?.bio ?? "Default Bio",
                                     style: TextStyle(
                                       fontFamily: 'Outfit',
                                       fontSize: 18,
@@ -334,7 +335,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                     ),
                                     textAlign: TextAlign.left,
-                                  )),
+                                  ),
+                                ),
                               isMyProfile
                                   ? Container()
                                   : isFollower()
@@ -344,11 +346,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 20, 0, 0),
                                             child: GestureDetector(
-                                                onTap: () {
-                                                  authstate.followUser(
-                                                      removeFollower:
-                                                          isFollower());
-                                                },
+                                              onTap: () {
+                                                if(authstate != null) {
+                                                authstate.followUser(removeFollower: isFollower() ?? false);
+                                                } else {
+                                                print("authstate is null");
+                                                   }
+                                                  },
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
