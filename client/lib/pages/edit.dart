@@ -73,10 +73,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-          toolbarHeight: 68,
           leading: Container(),
-          flexibleSpace: Padding(
-              padding: EdgeInsets.only(left: 5, top: 78),
+           flexibleSpace: SafeArea( // Added SafeArea for better padding
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5), // Use symmetric padding
               child: Column(
                 children: [
                   FadeIn(
@@ -107,7 +107,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     color: Colors.grey,
                   )
                 ],
-              )),
+      ),
+    ),
+  ),
           elevation: 0,
           backgroundColor: Colors.transparent,
           title: FadeInRight(
@@ -115,13 +117,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: Text(
                 "Modify profile",
                 style: TextStyle(color: Colors.white, fontSize: 18),
-              ))),
-      body: SingleChildScrollView(  // <-- Wrap your content with SingleChildScrollView
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),  // <-- Add some padding for better UI
-            child: Column(
-              children: [
+    ),
+  ),
+),
+      body: SingleChildScrollView(
+          child: Center(
+              child: Column(
+        children: [
           Container(
             height: 30,
           ),
@@ -323,11 +325,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ],
               ))
-              ],
-            ),
-          ),
-        ),
-      ),
+        ],
+      ))),
     );
   }
 
