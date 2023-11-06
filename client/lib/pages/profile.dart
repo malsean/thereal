@@ -568,3 +568,4 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'Share', icon: Icons.directions_car, isEnable: true),
   Choice(title: 'QR code', icon: Icons.directions_railway, isEnable: true),
 ];
+
