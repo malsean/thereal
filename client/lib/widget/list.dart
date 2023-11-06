@@ -9,7 +9,7 @@ class UserTilePage extends StatelessWidget {
   UserTilePage({Key? key, required this.user, required this.isadded})
       : super(key: key);
   final UserModel user;
-  final bool isadded;  // Make this field final
+  bool? isadded;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class UserTilePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  isadded
+                  isadded!
                       ? Container()
                       : Container(
                           height: 30,
