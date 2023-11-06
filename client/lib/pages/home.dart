@@ -133,107 +133,103 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ))),
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const FeedPage()));
-            },
-            child: Transform(
-                transform: Matrix4.identity()..scale(-1.0, 1.0, -1.0),
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.people,
-                  size: 30,
-                )),
+appBar: AppBar(
+  leading: GestureDetector(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedPage()));
+    },
+    child: Transform(
+        transform: Matrix4.identity()..scale(-1.0, 1.0, -1.0),
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.people,
+          size: 30,
+        )),
+  ),
+  toolbarHeight: 37,
+  actions: [
+    GestureDetector(
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyProfilePage()));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Container(
+            height: 30,
+            width: 30,
+            child: CachedNetworkImage(
+              imageUrl: authState.profileUserModel?.profilePic ??
+                  "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg",
+            ),
           ),
-          toolbarHeight: 37,
-          flexibleSpace: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 10, top: 59),
-                child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyProfilePage()));
-                    },
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Container(
-                            height: 30,
-                            width: 30,
-                            child: CachedNetworkImage(
-                                imageUrl: authState
-                                        .profileUserModel?.profilePic ??
-                                    "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg")))),
-              )
-            ],
-          ),
-          bottom: _isScrolledDown && tab != 1 || _isGrid
-              ? null
-              : TabBar(
-                  onTap: (index) {
-                    setState(() {
-                      tab = index;
-                    });
-                    HapticFeedback.mediumImpact();
-                  },
-                  controller: _tabController,
-                  isScrollable: false,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: ReBealColor.ReBealLightGrey,
-                  indicatorColor: Colors.transparent,
-                  indicatorWeight: 1,
-                  tabs: [
-                    FadeInUp(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Tab(
-                              child: Text(
-                                'My Friends',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ))),
-                    FadeInUp(
-                        child: Padding(
-                      padding: EdgeInsets.only(right: 0),
-                      child: Tab(
-                          child: Text(
-                        'Friends',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )),
-                    )),
-                    FadeInUp(
-                        child: Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Tab(
-                          child: Text(
-                        'Discovery',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )),
-                    )),
-                  ],
-                ),
-          elevation: 0,
-          title: Image.asset(
-            "assets/logo/logo.png",
-            height: 100,
-          ),
-          backgroundColor: Colors.transparent,
         ),
+      ),
+    ),
+  ],
+  bottom: _isScrolledDown && tab != 1 || _isGrid
+      ? null
+      : TabBar(
+          onTap: (index) {
+            setState(() {
+              tab = index;
+            });
+            HapticFeedback.mediumImpact();
+          },
+          controller: _tabController,
+          isScrollable: false,
+          labelColor: Colors.white,
+          unselectedLabelColor: ReBealColor.ReBealLightGrey,
+          indicatorColor: Colors.transparent,
+          indicatorWeight: 1,
+          tabs: [
+            FadeInUp(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Tab(
+                      child: Text(
+                        'My Friends',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ))),
+            FadeInUp(
+                child: Padding(
+              padding: EdgeInsets.only(right: 0),
+              child: Tab(
+                  child: Text(
+                'Friends',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              )),
+            )),
+            FadeInUp(
+                child: Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Tab(
+                  child: Text(
+                'Discovery',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              )),
+            )),
+          ],
+        ),
+  elevation: 0,
+  title: Image.asset(
+    "assets/logo/logo.png",
+    height: 100,
+  ),
+  backgroundColor: Colors.transparent,
+),
         body: FadeIn(
             child: AnimatedOpacity(
                 opacity: 1,
