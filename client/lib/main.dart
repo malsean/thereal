@@ -15,26 +15,23 @@ List<CameraDescription> cameras = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+
+  // Initialize Camera
   cameras = await availableCameras();
-  if (d.Platform.isIOS)
-    Firebase.initializeApp();
-  else
-    await Firebase.initializeApp(
-        options: FirebaseOptions(
-            apiKey: "",
-            authDomain: "",
-            databaseURL: "",
-            projectId: "",
-            storageBucket: "",
-            messagingSenderId: "",
-            appId: "",
-            measurementId: ""));
+
+  // Other initializations
   setupDependencies();
   final sharedPreferences = await SharedPreferences.getInstance();
+  
   runApp(MyApp(
     sharedPreferences: sharedPreferences,
   ));
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.sharedPreferences}) : super(key: key);
@@ -56,3 +53,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
